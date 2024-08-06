@@ -4,7 +4,7 @@
 
 1.SSH进入VPS，复制粘贴并执行以下脚本
 ```shell
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-install/main/reality.sh && bash reality.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/reality.sh && bash reality.sh
 ```
 2.输入1选项，安装Sing-box Reality  
 3.等待安装依赖之后、设置端口号、UUID和回落域名
