@@ -56,7 +56,7 @@ install_base(){
     ${PACKAGE_INSTALL[int]} curl wget sudo tar openssl
 }
 
-instsingbox(){
+install_singbox(){
     warpv6=$(curl -s6m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
     warpv4=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
     if [[ $warpv4 =~ on|plus || $warpv6 =~ on|plus ]]; then
