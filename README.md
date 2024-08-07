@@ -55,3 +55,4 @@ dl.google.com
 ## 鸣谢
 
 * BoxXt 的 Sing-box Reality 项目：https://github.com/BoxXt/installReality
+* Misaka 的 Sing-box Reality 项目：https://github.com/Misaka-blog/sbox-reality
