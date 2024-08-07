@@ -56,3 +56,5 @@ dl.google.com
 
 * BoxXt 的 Sing-box Reality 项目：https://github.com/BoxXt/installReality
 * Misaka 的 Sing-box Reality 项目：https://github.com/Misaka-blog/sbox-reality
+* Misaka 的 sing-shadowtls-3 项目：https://github.com/Misaka-blog/sing-shadowtls-3
+
