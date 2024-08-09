@@ -121,8 +121,8 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
       "sniff_override_destination": false,
       "sniff_timeout": "300ms",
       "domain_strategy": "prefer_ipv4",
-      "up_mbps": 500,
-      "down_mbps": 500,
+      "up_mbps": 50,
+      "down_mbps": 100,
       "obfs": {
         "type": "salamander",
         "password": "你的混淆密码，不需要混淆请删除obfs"
@@ -142,7 +142,7 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
           "h3"
         ]
       },
-      "masquerade": "https://github.com",
+      "masquerade": "https://bing.com",
       "brutal_debug": false
     }
   ],
@@ -164,12 +164,12 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
     "geoip": {
       "path": "geoip.db",
       "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "direct"
+      "download_detour": "proxy"
     },
     "geosite": {
       "path": "geosite.db",
       "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "direct"
+      "download_detour": "proxy"
     },
     "rules": [
       {
@@ -255,7 +255,7 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
       "server": "你的服务器IP或者域名",
       "server_port": 443,
       "up_mbps": 50,
-      "down_mbps": 500,
+      "down_mbps": 100,
       "password": "你的密码",
       "obfs": {
         "type": "salamander",
@@ -287,12 +287,12 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
     "geoip": {
       "path": "geoip.db",
       "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "direct"
+      "download_detour": "proxy"
     },
     "geosite": {
       "path": "geosite.db",
       "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "direct"
+      "download_detour": "proxy"
     },
     "rules": [
       {
