@@ -235,7 +235,7 @@ proxy-groups:
   - name: Proxy
     type: select
     proxies:
-      - Misaka-Reality
+      - Felix-Reality
       
 rules:
   - GEOIP,CN,DIRECT
