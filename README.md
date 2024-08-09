@@ -287,12 +287,12 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
     "geoip": {
       "path": "geoip.db",
       "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "proxy"
+      "download_detour": "direct"
     },
     "geosite": {
       "path": "geosite.db",
       "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "proxy"
+      "download_detour": "direct"
     },
     "rules": [
       {
