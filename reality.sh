@@ -195,7 +195,7 @@ EOF
     mkdir /root/sing-box >/dev/null 2>&1
 
     # 生成 vless 分享链接及 Clash Meta 配置文件
-    share_link="vless://$UUID@$IP:$port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=$dest_server&fp=chrome&pbk=$public_key&sid=$short_id&type=tcp&headerType=none#FelixGTs-Reality"
+    share_link="vless://$UUID@$IP:$port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=$dest_server&fp=chrome&pbk=$public_key&sid=$short_id&type=tcp&headerType=none#Felix-Reality"
     echo ${share_link} > /root/sing-box/share-link.txt
     cat << EOF > /root/sing-box/clash-meta.yaml
 mixed-port: 7890
@@ -215,7 +215,7 @@ dns:
     - 114.114.114.114
 
 proxies:
-  - name: Misaka-Reality
+  - name: Felix-Reality
     type: vless
     server: $IP
     port: $port
