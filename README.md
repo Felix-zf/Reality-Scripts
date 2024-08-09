@@ -145,8 +145,8 @@ clear
       "ignore_client_bandwidth": false,
       "tls": {
         "enabled": true,
-        "certificate_path": "你的证书文件路径.cer",
-        "key_path": "你的密钥文件路径.key",
+        "certificate_path": "你的证书文件路径",
+        "key_path": "你的密钥文件路径",
         "alpn": [
           "h3"
         ]
