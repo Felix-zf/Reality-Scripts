@@ -1,6 +1,6 @@
 # sbox-reality
 
-- Project Core_Sing-box：https://github.com/SagerNet/sing-box
+- Project Core Sing-box：https://github.com/SagerNet/sing-box
 - Offical Blog: https://sing-box.sagernet.org
 
 ## 基于 Sing-box 内核的 VLESS Reality 协议脚本
