@@ -73,6 +73,15 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
 ```
 
 ### 服务端配置样例
+- 新建hy2.json文件
+```
+cd /date/
+cd singbox
+ls
+vim hy2.json
+clear
+```
+- 修改配置文件
 ```
 {
   "log": {
