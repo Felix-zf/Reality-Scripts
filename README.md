@@ -1,10 +1,10 @@
-# Sbox-reality
+# 基于Sing-box内核的脚本搭建教程
 
 - Project Core Sing-box：https://github.com/SagerNet/sing-box
 - Sing-box Offical Blog: https://sing-box.sagernet.org/zh
 - Offical Blog: https://sing-box.sagernet.org
 
-## 基于 Sing-box 内核的 VLESS Reality 协议脚本
+## Sing-box & VLESS Reality 协议脚本
 
 1.SSH进入VPS，复制粘贴并执行以下脚本
 ```shell
@@ -14,7 +14,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbo
 3.等待安装依赖之后、设置端口号、UUID和回落域名
 4.管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
 
-## 回落域名说明
+### 回落域名说明
 1.选择回落域名的最低标准为：国外的网站，支持 TLS v1.3、H2 协议，并使用 x25519 证书  
 ```
 # 域名推荐
