@@ -70,6 +70,262 @@ sudo apt-get install sing-box # or sing-box-beta
 ```
 bash <(curl -fsSL https://sing-box.app/deb-install.sh)
 ```
+
+### 服务端配置样例
+```
+{
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "cloudflare",
+        "address": "https://1.1.1.1/dns-query",
+        "strategy": "ipv4_only",
+        "detour": "direct"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
+        "server": "block",
+        "disable_cache": true
+      }
+    ],
+    "final": "cloudflare",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false
+  },
+  "inbounds": [
+    {
+      "type": "hysteria2",
+      "tag": "hy2-in",
+      "listen": "::",
+      "listen_port": 443,
+      "tcp_fast_open": true,
+      "tcp_multi_path": false,
+      "udp_fragment": true,
+      "udp_timeout": 300,
+      "sniff": true,
+      "sniff_override_destination": false,
+      "sniff_timeout": "300ms",
+      "domain_strategy": "prefer_ipv4",
+      "up_mbps": 500,
+      "down_mbps": 500,
+      "obfs": {
+        "type": "salamander",
+        "password": "你的混淆密码，不需要混淆请删除obfs"
+      },
+      "users": [
+        {
+          "name": "你的用户名",
+          "password": "你的密码"
+        }
+      ],
+      "ignore_client_bandwidth": false,
+      "tls": {
+        "enabled": true,
+        "certificate_path": "你的证书文件路径",
+        "key_path": "你的密钥文件路径",
+        "alpn": [
+          "h3"
+        ]
+      },
+      "masquerade": "https://github.com",
+      "brutal_debug": false
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    }
+  ],
+  "route": {
+    "geoip": {
+      "path": "geoip.db",
+      "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
+      "download_detour": "direct"
+    },
+    "geosite": {
+      "path": "geosite.db",
+      "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
+      "download_detour": "direct"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
+        "outbound": "block"
+      }
+    ],
+    "auto_detect_interface": true,
+    "final": "direct"
+  },
+  "experimental": {}
+}
+```
+
+### 客户端配置样例
+```
+{
+  "dns": {
+    "servers": [
+      {
+        "tag": "alidns",
+        "address": "https://223.5.5.5/dns-query",
+        "strategy": "ipv4_only",
+        "detour": "direct"
+      },
+      {
+        "tag": "cloudflare",
+        "address": "https://1.1.1.1/dns-query",
+        "strategy": "ipv4_only",
+        "detour": "proxy"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "geosite": [
+          "cn"
+        ],
+        "domain_suffix": [
+          ".cn"
+        ],
+        "server": "alidns",
+        "disable_cache": false
+      },
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
+        "server": "block",
+        "disable_cache": true
+      }
+    ],
+    "final": "cloudflare",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "::",
+      "listen_port": 5353,
+      "tcp_fast_open": true,
+      "udp_fragment": true,
+      "sniff": true,
+      "set_system_proxy": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "hysteria2",
+      "tag": "proxy",
+      "server": "你的服务器IP或者域名",
+      "server_port": 443,
+      "up_mbps": 50,
+      "down_mbps": 500,
+      "password": "你的密码",
+      "obfs": {
+        "type": "salamander",
+        "password": "你的混淆密码，混淆要与服务端保持一致"
+      },
+      "tls": {
+        "enabled": true,
+        "server_name": "你的域名",
+        "alpn": [
+          "h3"
+        ]
+      },
+      "brutal_debug": false
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    }
+  ],
+  "route": {
+    "geoip": {
+      "path": "geoip.db",
+      "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
+      "download_detour": "direct"
+    },
+    "geosite": {
+      "path": "geosite.db",
+      "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
+      "download_detour": "direct"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "geosite": [
+          "cn",
+          "private"
+        ],
+        "geoip": [
+          "cn",
+          "private"
+        ],
+        "domain_suffix": [
+          ".cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
+        "outbound": "block"
+      }
+    ],
+    "auto_detect_interface": true,
+    "final": "proxy"
+  },
+  "experimental": {}
+}
+```
+
 ### 服务管理
 1.启用
 ```
