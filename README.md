@@ -54,6 +54,48 @@ dl.google.com
 - 打开Chrome，进入待测网页。按下F12键，转到“Secure”选项卡。在“Connection”下出现“TLS 1.3，X25519”字样即代表网页支持 TLSv1.3 协议、并且使用的是 x25519 证书
 - 转到“Console”选项卡，输入这个命令 window.chrome.loadTimes()，查看 npnNegotiatedProtocol 的值是否为 h2，如果是的话就代表使用的是 H2 协议
 
+## Sing-box手动配置
+
+### debian/APT安装
+1.仓库安装
+```
+sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
+sudo chmod a+r /etc/apt/keyrings/sagernet.asc
+echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
+  sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+sudo apt-get update
+sudo apt-get install sing-box # or sing-box-beta
+```
+2.手动安装
+```
+bash <(curl -fsSL https://sing-box.app/deb-install.sh)
+```
+### 服务管理
+1.启用
+```
+sudo systemctl enable sing-box
+```
+2.禁用
+```
+sudo systemctl disable sing-box
+```
+3.启动
+```
+sudo systemctl start sing-box
+```
+4.停止
+```
+sudo systemctl stop sing-box
+```
+5.查看日志
+```
+sudo journalctl -u sing-box --output cat -e
+```
+6.实时日志
+```
+sudo journalctl -u sing-box --output cat -f
+```
+
 ## 鸣谢
 
 * BoxXt 的 Sing-box Reality 项目：https://github.com/BoxXt/installReality
