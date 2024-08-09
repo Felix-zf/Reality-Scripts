@@ -58,4 +58,5 @@ dl.google.com
 * BoxXt 的 Sing-box Reality 项目：https://github.com/BoxXt/installReality
 * Misaka 的 Sing-box Reality 项目：https://github.com/Misaka-blog/sbox-reality
 * Misaka 的 sing-shadowtls-3 项目：https://github.com/Misaka-blog/sing-shadowtls-3
-
+* Dev分享手搓sing-box hysteria的视频：https://www.youtube.com/watch?v=z6tIE6P-l4E
+* Elden的sing-box配置hysteria2的笔记：https://idev.dev/proxy/singbox-hysteria2.html
