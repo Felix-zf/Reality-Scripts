@@ -123,33 +123,26 @@ clear
   "inbounds": [
     {
       "type": "hysteria2",
-      "tag": "hy2-in",
       "listen": "::",
-      "listen_port": 443,
-      "tcp_fast_open": true,
-      "tcp_multi_path": false,
-      "udp_fragment": true,
-      "udp_timeout": 300,
-      "sniff": true,
-      "sniff_override_destination": false,
-      "sniff_timeout": "300ms",
-      "domain_strategy": "prefer_ipv4",
-      "up_mbps": 50,
+      "listen_port": 8080,
+      "up_mbps": 100,
       "down_mbps": 100,
       "users": [
         {
-          "name": "你的用户名",
-          "password": "你的密码"
+          "name": "sekai",
+          "password": "<password>"
         }
       ],
-      "ignore_client_bandwidth": false,
       "tls": {
         "enabled": true,
-        "certificate_path": "/root/cert.crt",
-        "key_path": "/root/private.key",
-        "alpn": [
-          "h3"
-        ]
+        "server_name": "example.org",
+        "acme": {
+          "domain": "example.org",
+          "email": "admin@example.org"
+        }
+      }
+    }
+  ]
       },
       "masquerade": "https://bing.com",
       "brutal_debug": false
