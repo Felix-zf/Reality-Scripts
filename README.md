@@ -136,10 +136,6 @@ clear
       "domain_strategy": "prefer_ipv4",
       "up_mbps": 50,
       "down_mbps": 100,
-      "obfs": {
-        "type": "salamander",
-        "password": "你的混淆密码，不需要混淆请删除obfs"
-      },
       "users": [
         {
           "name": "你的用户名",
@@ -270,10 +266,6 @@ clear
       "up_mbps": 50,
       "down_mbps": 100,
       "password": "你的密码",
-      "obfs": {
-        "type": "salamander",
-        "password": "你的混淆密码，混淆要与服务端保持一致"
-      },
       "tls": {
         "enabled": true,
         "server_name": "你的域名",
