@@ -287,12 +287,12 @@ clear
     "geoip": {
       "path": "geoip.db",
       "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "direct"
+      "download_detour": "proxy"
     },
     "geosite": {
       "path": "geosite.db",
       "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "direct"
+      "download_detour": "proxy"
     },
     "rules": [
       {
