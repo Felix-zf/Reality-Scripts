@@ -73,10 +73,6 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
 ```
 
 ### 服务端配置样例
-- acme.sh 证书一键申请脚本
-```
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/ACME-Scripts/main/acme.sh && bash acme.sh
-```
 - 新建hy2.json文件
 ```
 cd /date/
