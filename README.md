@@ -92,45 +92,35 @@ clear
    "dns": {
     "servers": [
       {
-        "tag": "dns_proxy",
-        "address": "https://1.1.1.1/dns-query",
-        "address_resolver": "dns_resolver",
-        "strategy": "ipv4_only",
-        "detour": "select"
+        "tag": "cf",
+        "address": "https://1.1.1.1/dns-query"
       },
       {
-        "tag": "dns_direct",
-        "address": "h3://dns.alidns.com/dns-query",
-        "address_resolver": "dns_resolver",
-        "strategy": "ipv4_only",
-        "detour": "direct"
-      },
-      {
-        "tag": "dns_block",
-        "address": "rcode://refused"
-      },
-      {
-        "tag": "dns_resolver",
+        "tag": "local",
         "address": "223.5.5.5",
-        "strategy": "ipv4_only",
         "detour": "direct"
-      }
-    ]
-  }
-},
-    "rules": [
+      },
       {
-        "geosite": [
-          "category-ads-all"
-        ],
-        "server": "block",
-        "disable_cache": true
+        "tag": "block",
+        "address": "rcode://success"
       }
     ],
-    "final": "cloudflare",
-    "strategy": "",
-    "disable_cache": false,
-    "disable_expire": false
+    "rules": [
+      {
+        "geosite": "category-ads-all",
+        "server": "block",
+        "disable_cache": true
+      },
+      {
+        "outbound": "any",
+        "server": "local"
+      },
+      {
+        "geosite": "cn",
+        "server": "local"
+      }
+    ],
+    "strategy": "ipv4_only"
   },
   "inbounds": [
     {
