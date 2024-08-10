@@ -197,19 +197,16 @@ clear
 ### 客户端配置样例
 ```
 {
-  "dns": {
+   "dns": {
     "servers": [
       {
-        "tag": "alidns",
-        "address": "https://223.5.5.5/dns-query",
-        "strategy": "ipv4_only",
-        "detour": "direct"
+        "tag": "cf",
+        "address": "https://1.1.1.1/dns-query"
       },
       {
-        "tag": "cloudflare",
-        "address": "https://1.1.1.1/dns-query",
-        "strategy": "ipv4_only",
-        "detour": "proxy"
+        "tag": "local",
+        "address": "223.5.5.5",
+        "detour": "direct"
       },
       {
         "tag": "block",
@@ -218,27 +215,20 @@ clear
     ],
     "rules": [
       {
-        "geosite": [
-          "cn"
-        ],
-        "domain_suffix": [
-          ".cn"
-        ],
-        "server": "alidns",
-        "disable_cache": false
-      },
-      {
-        "geosite": [
-          "category-ads-all"
-        ],
+        "geosite": "category-ads-all",
         "server": "block",
         "disable_cache": true
+      },
+      {
+        "outbound": "any",
+        "server": "local"
+      },
+      {
+        "geosite": "cn",
+        "server": "local"
       }
     ],
-    "final": "cloudflare",
-    "strategy": "",
-    "disable_cache": false,
-    "disable_expire": false
+    "strategy": "ipv4_only"
   },
   "inbounds": [
     {
