@@ -364,5 +364,5 @@ sudo journalctl -u sing-box --output cat -f
 * Misaka 的 Sing-box Reality 项目：https://github.com/Misaka-blog/sbox-reality
 * Misaka 的 sing-shadowtls-3 项目：https://github.com/Misaka-blog/sing-shadowtls-3
 * Dev分享手搓sing-box hysteria 视频：https://www.youtube.com/watch?v=z6tIE6P-l4E
-* 纯纯牛马林师傅手搓sing-box配置视频：https://www.youtube.com/watch?v=2QaeeZv9C-A
+* 纯纯牛马林师傅手搓 sing-box 视频：https://www.youtube.com/watch?v=2QaeeZv9C-A
 * Elden的sing-box配置hysteria2 笔记：https://idev.dev/proxy/singbox-hysteria2.html
