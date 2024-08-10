@@ -81,6 +81,17 @@ ls
 vim hy2.json
 clear
 ```
+- sing-box 使用 JSON 作为配置文件格式的架构
+```
+{
+  "log": {},
+  "dns": {},
+  "inbounds": [],
+  "outbounds": [],
+  "route": {},
+  "experimental": {}
+}
+```
 - 修改配置文件
 ```
 {
