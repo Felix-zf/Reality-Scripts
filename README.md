@@ -131,7 +131,7 @@ clear
       "down_mbps": 100,
       "users": [
         {
-          "name": "sekai",
+          "name": "felix",
           "password": "<password>"
         }
       ],
