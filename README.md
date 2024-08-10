@@ -249,7 +249,7 @@ clear
   "outbounds": [
     {
       "type": "hysteria2",
-      "server": "127.0.0.1",
+      "server": "ip",
       "server_port": 443,
       "up_mbps": 100,
       "down_mbps": 100,
