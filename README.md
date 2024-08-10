@@ -143,7 +143,7 @@ clear
       "users": [
         {
           "name": "felix",
-          "password": "<password>"
+          "password": "password"
         }
       ],
       "tls": {
@@ -260,7 +260,7 @@ clear
       "server_port": 443,
       "up_mbps": 100,
       "down_mbps": 100,
-      "password": "<password>",
+      "password": "password",
       "tls": {
         "enabled": true,
         "server_name": "example.org"
