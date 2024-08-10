@@ -121,7 +121,7 @@ clear
       "type": "hysteria2",
       "listen": "::",
       "listen_port": 8080,
-      "up_mbps": 50,
+      "up_mbps": 100,
       "down_mbps": 100,
       "users": [
         {
@@ -252,7 +252,7 @@ clear
       "tag": "proxy",
       "server": "你的服务器IP或者域名",
       "server_port": 443,
-      "up_mbps": 50,
+      "up_mbps": 100,
       "down_mbps": 100,
       "password": "你的密码",
       "tls": {
