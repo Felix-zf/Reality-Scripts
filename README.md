@@ -89,19 +89,35 @@ clear
     "level": "info",
     "timestamp": true
   },
-  "dns": {
+   "dns": {
     "servers": [
       {
-        "tag": "cloudflare",
+        "tag": "dns_proxy",
         "address": "https://1.1.1.1/dns-query",
+        "address_resolver": "dns_resolver",
+        "strategy": "ipv4_only",
+        "detour": "select"
+      },
+      {
+        "tag": "dns_direct",
+        "address": "h3://dns.alidns.com/dns-query",
+        "address_resolver": "dns_resolver",
         "strategy": "ipv4_only",
         "detour": "direct"
       },
       {
-        "tag": "block",
-        "address": "rcode://success"
+        "tag": "dns_block",
+        "address": "rcode://refused"
+      },
+      {
+        "tag": "dns_resolver",
+        "address": "223.5.5.5",
+        "strategy": "ipv4_only",
+        "detour": "direct"
       }
-    ],
+    ]
+  }
+},
     "rules": [
       {
         "geosite": [
