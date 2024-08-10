@@ -73,6 +73,10 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
 ```
 
 ### 服务端配置样例
+- acme.sh 证书一键申请脚本
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/ACME-Scripts/main/acme.sh && bash acme.sh
+```
 - 新建hy2.json文件
 ```
 cd /date/
@@ -145,8 +149,8 @@ clear
       "ignore_client_bandwidth": false,
       "tls": {
         "enabled": true,
-        "certificate_path": "你的证书文件路径",
-        "key_path": "你的密钥文件路径",
+        "certificate_path": "/root/cert.crt",
+        "key_path": "/root/private.key",
         "alpn": [
           "h3"
         ]
