@@ -120,7 +120,7 @@ clear
     {
       "type": "hysteria2",
       "listen": "::",
-      "listen_port": 8080,
+      "listen_port": 443,
       "up_mbps": 100,
       "down_mbps": 100,
       "users": [
@@ -239,7 +239,7 @@ clear
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "::",
-      "listen_port": 8080,
+      "listen_port": 5353,
       "tcp_fast_open": true,
       "udp_fragment": true,
       "sniff": true,
