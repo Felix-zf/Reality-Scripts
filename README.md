@@ -249,18 +249,17 @@ clear
   "outbounds": [
     {
       "type": "hysteria2",
-      "tag": "proxy",
-      "server": "你的服务器IP或者域名",
+      "server": "127.0.0.1",
       "server_port": 443,
       "up_mbps": 100,
       "down_mbps": 100,
-      "password": "你的密码",
+      "password": "<password>",
       "tls": {
         "enabled": true,
-        "server_name": "你的域名",
-        "alpn": [
-          "h3"
-        ]
+        "server_name": "example.org"
+      }
+    }
+  ]
       },
       "brutal_debug": false
     },
