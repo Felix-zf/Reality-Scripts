@@ -100,15 +100,12 @@ clear
     "level": "info",
     "timestamp": true
   },
-   "dns": {
+  "dns": {
     "servers": [
       {
-        "tag": "cf",
-        "address": "https://1.1.1.1/dns-query"
-      },
-      {
-        "tag": "local",
-        "address": "223.5.5.5",
+        "tag": "cloudflare",
+        "address": "https://1.1.1.1/dns-query",
+        "strategy": "ipv4_only",
         "detour": "direct"
       },
       {
@@ -118,46 +115,54 @@ clear
     ],
     "rules": [
       {
-        "geosite": "category-ads-all",
+        "geosite": [
+          "category-ads-all"
+        ],
         "server": "block",
         "disable_cache": true
-      },
-      {
-        "outbound": "any",
-        "server": "local"
-      },
-      {
-        "geosite": "cn",
-        "server": "local"
       }
     ],
-    "strategy": "ipv4_only"
+    "final": "cloudflare",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false
   },
   "inbounds": [
     {
       "type": "hysteria2",
+      "tag": "hy2-in",
       "listen": "::",
       "listen_port": 443,
-      "up_mbps": 100,
-      "down_mbps": 100,
+      "tcp_fast_open": true,
+      "tcp_multi_path": false,
+      "udp_fragment": true,
+      "udp_timeout": 300,
+      "sniff": true,
+      "sniff_override_destination": false,
+      "sniff_timeout": "300ms",
+      "domain_strategy": "prefer_ipv4",
+      "up_mbps": 500,
+      "down_mbps": 500,
+      "obfs": {
+        "type": "salamander",
+        "password": "你的混淆密码，不需要混淆请删除obfs"
+      },
       "users": [
         {
-          "name": "felix",
-          "password": "password"
+          "name": "你的用户名",
+          "password": "你的密码"
         }
       ],
+      "ignore_client_bandwidth": false,
       "tls": {
         "enabled": true,
-        "server_name": "example.org",
-        "acme": {
-          "domain": "example.org",
-          "email": "admin@example.org"
-        }
-      }
-    }
-  ]
+        "certificate_path": "你的证书文件路径",
+        "key_path": "你的密钥文件路径",
+        "alpn": [
+          "h3"
+        ]
       },
-      "masquerade": "https://bing.com",
+      "masquerade": "https://github.com",
       "brutal_debug": false
     }
   ],
@@ -208,16 +213,19 @@ clear
 ### 客户端配置样例
 ```
 {
-   "dns": {
+  "dns": {
     "servers": [
       {
-        "tag": "cf",
-        "address": "https://1.1.1.1/dns-query"
+        "tag": "alidns",
+        "address": "https://223.5.5.5/dns-query",
+        "strategy": "ipv4_only",
+        "detour": "direct"
       },
       {
-        "tag": "local",
-        "address": "223.5.5.5",
-        "detour": "direct"
+        "tag": "cloudflare",
+        "address": "https://1.1.1.1/dns-query",
+        "strategy": "ipv4_only",
+        "detour": "proxy"
       },
       {
         "tag": "block",
@@ -226,20 +234,27 @@ clear
     ],
     "rules": [
       {
-        "geosite": "category-ads-all",
+        "geosite": [
+          "cn"
+        ],
+        "domain_suffix": [
+          ".cn"
+        ],
+        "server": "alidns",
+        "disable_cache": false
+      },
+      {
+        "geosite": [
+          "category-ads-all"
+        ],
         "server": "block",
         "disable_cache": true
-      },
-      {
-        "outbound": "any",
-        "server": "local"
-      },
-      {
-        "geosite": "cn",
-        "server": "local"
       }
     ],
-    "strategy": "ipv4_only"
+    "final": "cloudflare",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false
   },
   "inbounds": [
     {
@@ -256,17 +271,22 @@ clear
   "outbounds": [
     {
       "type": "hysteria2",
-      "server": "ip",
+      "tag": "proxy",
+      "server": "你的服务器IP或者域名",
       "server_port": 443,
-      "up_mbps": 100,
-      "down_mbps": 100,
-      "password": "password",
+      "up_mbps": 50,
+      "down_mbps": 500,
+      "password": "你的密码",
+      "obfs": {
+        "type": "salamander",
+        "password": "你的混淆密码，混淆要与服务端保持一致"
+      },
       "tls": {
         "enabled": true,
-        "server_name": "example.org"
-      }
-    }
-  ]
+        "server_name": "你的域名",
+        "alpn": [
+          "h3"
+        ]
       },
       "brutal_debug": false
     },
@@ -287,12 +307,12 @@ clear
     "geoip": {
       "path": "geoip.db",
       "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "proxy"
+      "download_detour": "direct"
     },
     "geosite": {
       "path": "geosite.db",
       "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "proxy"
+      "download_detour": "direct"
     },
     "rules": [
       {
