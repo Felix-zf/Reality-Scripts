@@ -4,6 +4,23 @@
 - Sing-box Offical Blog: https://sing-box.sagernet.org/zh
 - Offical Blog: https://sing-box.sagernet.org
 
+## 搭建准备
+1.VPS性能检测
+```
+wget -qO- bench.sh | bash
+```
+2.Debian更新系统
+```
+apt update -y
+```
+3.安装bbr加速
+```
+echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+sysctl -p
+lsmod | grep bbr
+```
+
 ## Sing-box & Vless reality 协议脚本
 
 1.SSH进入VPS，复制粘贴并执行以下脚本
