@@ -13,7 +13,7 @@ wget -qO- bench.sh | bash
 ```
 apt update -y
 ```
-3.安装bbr加速
+3.bbr加速
 ```
 echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
 echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
