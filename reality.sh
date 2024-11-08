@@ -57,34 +57,12 @@ install_base(){
 }
 
 install_singbox(){
-    warpv6=$(curl -s6m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
-    warpv4=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
-    if [[ $warpv4 =~ on|plus || $warpv6 =~ on|plus ]]; then
-        wg-quick down wgcf >/dev/null 2>&1
-        systemctl stop warp-go >/dev/null 2>&1
-        realip
-        systemctl start warp-go >/dev/null 2>&1
-        wg-quick up wgcf >/dev/null 2>&1
-    else
-        realip
-    fi
-
-    if [[ ! ${SYSTEM} == "CentOS" ]]; then
-        ${PACKAGE_UPDATE}
-    fi
-    ${PACKAGE_INSTALL} wget curl sudo
-
-    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
-
-    if [[ $SYSTEM == "CentOS" ]]; then
-        wget -N --no-check-certificate https://github.com/SagerNet/sing-box/releases/download/v$last_version/sing-box_"$last_version"_linux_$(archAffix).rpm
-        rpm -i sing-box_"$last_version"_linux_$(archAffix).rpm
-        rm -f sing-box_"$last_version"_linux_$(archAffix).rpm
-    else
-        wget -N --no-check-certificate https://github.com/SagerNet/sing-box/releases/download/v$last_version/sing-box_"$last_version"_linux_$(archAffix).deb
-        dpkg -i sing-box_"$last_version"_linux_$(archAffix).deb
-        rm -f sing-box_"$last_version"_linux_$(archAffix).deb
-    fi
+    sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
+    sudo chmod a+r /etc/apt/keyrings/sagernet.asc
+    echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
+    sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install sing-box # or sing-box-beta
 
     rm -f /etc/sing-box/config.json
 
