@@ -401,3 +401,4 @@ sudo journalctl -u sing-box --output cat -f
 * Dev分享手搓sing-box hysteria 视频：https://www.youtube.com/watch?v=z6tIE6P-l4E
 * 纯纯牛马林师傅手搓 sing-box 视频：https://www.youtube.com/watch?v=2QaeeZv9C-A
 * Elden的sing-box配置hysteria2 笔记：https://idev.dev/proxy/singbox-hysteria2.html
+* Zxcvos的xray-script项目搭建vless-reality：https://github.com/zxcvos/Xray-script
