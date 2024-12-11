@@ -78,13 +78,6 @@ install_singbox(){
         rm -f sing-box.deb
     fi
 
-    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
-        green "Sing-box 安装成功！"
-    else
-        red "Sing-box 安装失败！"
-        exit 1
-    fi
-
     rm -f /etc/sing-box/config.json
 
     # 询问用户有关 Reality 端口、UUID 和回落域名
