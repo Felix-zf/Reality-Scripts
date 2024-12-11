@@ -50,7 +50,7 @@ archAffix() {
 }
 
 install_base(){
-    if [[ ! $SYSTEM == "Debian" ]]; then
+    if [[ ! $SYSTEM == "CentOS" ]]; then
         ${PACKAGE_UPDATE[int]}
     fi
     ${PACKAGE_INSTALL[int]} curl wget sudo tar openssl
@@ -58,25 +58,12 @@ install_base(){
 
 install_singbox(){
     install_base
-    
-    warpv6=$(curl -s6m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
-    warpv4=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
-    if [[ $warpv4 =~ on|plus || $warpv6 =~ on|plus ]]; then
-        wg-quick down wgcf >/dev/null 2>&1
-        systemctl stop warp-go >/dev/null 2>&1
-        realip
-        systemctl start warp-go >/dev/null 2>&1
-        wg-quick up wgcf >/dev/null 2>&1
-    else
-        realip
-    fi
-
-    if [[ ! ${SYSTEM} == "Debian" ]]; then
-        ${PACKAGE_UPDATE}
-    fi
-    ${PACKAGE_INSTALL} wget curl sudo
 
     last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
+    if [[ -z $last_version ]]; then
+        red "获取版本信息失败，请检查VPS的网络状态！"
+        exit 1
+    fi
 
     if [[ $SYSTEM == "CentOS" ]]; then
         wget -N --no-check-certificate https://github.com/SagerNet/sing-box/releases/download/v$last_version/sing-box_"$last_version"_linux_$(archAffix).rpm
@@ -88,7 +75,12 @@ install_singbox(){
         rm -f sing-box_"$last_version"_linux_$(archAffix).deb
     fi
 
-    rm -f /etc/sing-box/config.json
+    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
+        green "Sing-box 安装成功！"
+    else
+        red "Sing-box 安装失败！"
+        exit 1
+    fi
 
     # 询问用户有关 Reality 端口、UUID 和回落域名
     read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
