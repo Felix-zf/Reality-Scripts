@@ -1,4 +1,4 @@
-# 基于Sing-box内核的脚本搭建教程
+# 搭建教程
 
 - Project Core Sing-box：https://github.com/SagerNet/sing-box
 - Sing-box Offical Blog: https://sing-box.sagernet.org/zh
