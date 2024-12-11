@@ -57,6 +57,8 @@ install_base(){
 }
 
 install_singbox(){
+    install_base
+    
     sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
     sudo chmod a+r /etc/apt/keyrings/sagernet.asc
     echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
