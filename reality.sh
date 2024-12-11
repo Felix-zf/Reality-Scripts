@@ -57,12 +57,30 @@ install_base(){
 }
 
 install_singbox(){
-    sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
-    sudo chmod a+r /etc/apt/keyrings/sagernet.asc
-    echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
-    sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install sing-box # or sing-box-beta
+    install_base
+
+    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
+    if [[ -z $last_version ]]; then
+        red "获取版本信息失败，请检查VPS的网络状态！"
+        exit 1
+    fi
+
+    if [[ $SYSTEM == "Debian" ]]; then
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).rpm -O sing-box.rpm
+        rpm -ivh sing-box.rpm
+        rm -f sing-box.rpm
+    else
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
+        dpkg -i sing-box.deb
+        rm -f sing-box.deb
+    fi
+
+    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
+        green "Sing-box 安装成功！"
+    else
+        red "Sing-box 安装失败！"
+        exit 1
+    fi
 
     rm -f /etc/sing-box/config.json
 
