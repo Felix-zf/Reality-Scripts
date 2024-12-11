@@ -23,22 +23,35 @@ lsmod | grep bbr
 
 ## Sing-box & Vless reality 协议脚本
 
+**基于Sing-box内核的一键安装脚本**
+
 1.SSH进入VPS，复制粘贴并执行以下脚本  
-*基于Sing-box内核的一键安装脚本
 ```shell
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/reality.sh && bash reality.sh
-```
-*基于Xray内核的一键安装脚本
-```
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/x-reality.sh && bash x-reality.sh
-```
-*Zxcvos的Xray-Vless_reality一键脚本
-```
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/xray-reality.sh && bash xray-reality.sh
 ```
 2.输入1选项，安装Sing-box Reality  
 3.等待安装依赖之后、设置端口号、UUID和回落域名
 4.管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
+
+**基于Xray内核的一键安装脚本**
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/x-reality.sh && bash x-reality.sh
+```
+Zxcvos的Xray-Vless_reality一键脚本
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/xray-reality.sh && bash xray-reality.sh
+```
+
+***Xray内核相关命令***
+```
+xray.start     #启动xray
+xray.stop      #停止xray
+xray.restart   #重启xray
+xray.chuuid    #重新生成uuid
+xray.delxray   #彻底删除xray内核及脚本
+xray.help      #帮助
+```
+Tips:详情见 Oldfriendme 的项目：https://github.com/oldfriendme/xrayREALITY
 
 ### 回落域名说明
 1.选择回落域名的最低标准为：国外的网站，支持 TLS v1.3、H2 协议，并使用 x25519 证书  
@@ -408,4 +421,4 @@ sudo journalctl -u sing-box --output cat -f
 * 纯纯牛马林师傅手搓 sing-box 视频：https://www.youtube.com/watch?v=2QaeeZv9C-A
 * Elden的sing-box配置hysteria2 笔记：https://idev.dev/proxy/singbox-hysteria2.html
 * Zxcvos的xray-script项目搭建vless-reality：https://github.com/zxcvos/Xray-script
-* Oldfriendme的项目：https://github.com/oldfriendme/xrayREALITY
+
