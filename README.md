@@ -27,6 +27,9 @@ lsmod | grep bbr
 ```shell
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/reality.sh && bash reality.sh
 ```
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/xray-reality.sh && bash xray-reality.sh
+```
 2.输入1选项，安装Sing-box Reality  
 3.等待安装依赖之后、设置端口号、UUID和回落域名
 4.管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
