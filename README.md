@@ -27,6 +27,10 @@ lsmod | grep bbr
 ```shell
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/reality.sh && bash reality.sh
 ```
+基于xray内核的一键安装脚本
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/x-reality.sh && bash x-reality.sh
+```
 Zxcvos的Xray-Vless_reality一键脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/xray-reality.sh && bash xray-reality.sh
