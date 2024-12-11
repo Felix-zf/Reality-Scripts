@@ -57,30 +57,14 @@ install_base(){
 }
 
 install_singbox(){
-    install_base
+    sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
+    sudo chmod a+r /etc/apt/keyrings/sagernet.asc
+    echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
+    sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install sing-box # or sing-box-beta
 
-    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
-    if [[ -z $last_version ]]; then
-        red "获取版本信息失败，请检查VPS的网络状态！"
-        exit 1
-    fi
-
-    if [[ $SYSTEM == "CentOS" ]]; then
-        wget -N --no-check-certificate https://github.com/SagerNet/sing-box/releases/download/v$last_version/sing-box_"$last_version"_linux_$(archAffix).rpm
-        rpm -i sing-box_"$last_version"_linux_$(archAffix).rpm
-        rm -f sing-box_"$last_version"_linux_$(archAffix).rpm
-    else
-        wget -N --no-check-certificate https://github.com/SagerNet/sing-box/releases/download/v$last_version/sing-box_"$last_version"_linux_$(archAffix).deb
-        dpkg -i sing-box_"$last_version"_linux_$(archAffix).deb
-        rm -f sing-box_"$last_version"_linux_$(archAffix).deb
-    fi
-
-    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
-        green "Sing-box 安装成功！"
-    else
-        red "Sing-box 安装失败！"
-        exit 1
-    fi
+    rm -f /etc/sing-box/config.json
 
     # 询问用户有关 Reality 端口、UUID 和回落域名
     read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
