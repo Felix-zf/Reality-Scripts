@@ -66,9 +66,12 @@ install_singbox(){
     fi
 
     if [[ $SYSTEM == "Debian" ]]; then
-        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).rpm -O sing-box.rpm
-        rpm -ivh sing-box.rpm
-        rm -f sing-box.rpm
+        sudo curl -fsSL https://sing-box.app/gpg.key -o /etc/apt/keyrings/sagernet.asc
+        sudo chmod a+r /etc/apt/keyrings/sagernet.asc
+        echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/sagernet.asc] https://deb.sagernet.org/ * *" | \
+        sudo tee /etc/apt/sources.list.d/sagernet.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install sing-box # or sing-box-beta
     else
         wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
         dpkg -i sing-box.deb
