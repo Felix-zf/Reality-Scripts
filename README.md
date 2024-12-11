@@ -23,15 +23,16 @@ lsmod | grep bbr
 
 ## Sing-box & Vless reality 协议脚本
 
-1.SSH进入VPS，复制粘贴并执行以下脚本
+1.SSH进入VPS，复制粘贴并执行以下脚本  
+*基于Sing-box内核的一键安装脚本
 ```shell
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/reality.sh && bash reality.sh
 ```
-基于xray内核的一键安装脚本
+*基于Xray内核的一键安装脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/x-reality.sh && bash x-reality.sh
 ```
-Zxcvos的Xray-Vless_reality一键脚本
+*Zxcvos的Xray-Vless_reality一键脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Singbox-Scripts/main/xray-reality.sh && bash xray-reality.sh
 ```
@@ -407,3 +408,4 @@ sudo journalctl -u sing-box --output cat -f
 * 纯纯牛马林师傅手搓 sing-box 视频：https://www.youtube.com/watch?v=2QaeeZv9C-A
 * Elden的sing-box配置hysteria2 笔记：https://idev.dev/proxy/singbox-hysteria2.html
 * Zxcvos的xray-script项目搭建vless-reality：https://github.com/zxcvos/Xray-script
+* Oldfriendme的项目：https://github.com/oldfriendme/xrayREALITY
