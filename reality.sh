@@ -74,7 +74,7 @@ install_singbox(){
         dpkg -i sing-box.deb
         rm -f sing-box.deb
     fi
-    systemctl restart sing-box
+
     if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
         green "Sing-box 安装成功！"
     else
