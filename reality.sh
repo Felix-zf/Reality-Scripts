@@ -1,167 +1,338 @@
 #!/bin/bash
 
-# 定义颜色
 RED="\033[31m"
 GREEN="\033[32m"
 YELLOW="\033[33m"
-PLAIN="\033[0m"
-
-# 函数定义
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
-}
+PLAIN='\033[0m'
 
 red() {
-    echo -e "${RED}$1${PLAIN}"
+    echo -e "\033[31m\033[01m$1\033[0m"
 }
 
 green() {
-    echo -e "${GREEN}$1${PLAIN}"
+    echo -e "\033[32m\033[01m$1\033[0m"
 }
 
 yellow() {
-    echo -e "${YELLOW}$1${PLAIN}"
+    echo -e "\033[33m\033[01m$1\033[0m"
 }
 
-# 确认函数
-confirm() {
-    read -p "$1 (y/n): " -n 1 -r
-    echo
-    [[ $REPLY =~ ^[Yy]$ ]] && return 0 || return 1
-}
+REGEX=("debian" "ubuntu" "centos|red hat|kernel|oracle linux|alma|rocky" "'amazon linux'" "fedora" "alpine")
+RELEASE=("Debian" "Ubuntu" "CentOS" "CentOS" "Fedora" "Alpine")
+PACKAGE_UPDATE=("apt-get update" "apt-get update" "yum -y update" "yum -y update" "yum -y update" "apk update -f")
+PACKAGE_INSTALL=("apt -y install" "apt -y install" "yum -y install" "yum -y install" "yum -y install" "apk add -f")
+PACKAGE_UNINSTALL=("apt -y autoremove" "apt -y autoremove" "yum -y autoremove" "yum -y autoremove" "yum -y autoremove" "apk del -f")
 
-# 安装Sing-box
-install_singbox() {
-    log "Installing Sing-box with VLESS + REALITY..."
-    if ! confirm "你确定要安装 Sing-box 并配置 VLESS + REALITY 吗？"; then
-        log "用户取消安装"
-        exit 0
+[[ $EUID -ne 0 ]] && red "注意：请在root用户下运行脚本" && exit 1
+
+CMD=("$(grep -i pretty_name /etc/os-release 2>/dev/null | cut -d \" -f2)" "$(hostnamectl 2>/dev/null | grep -i system | cut -d : -f2)" "$(lsb_release -sd 2>/dev/null)" "$(grep -i description /etc/lsb-release 2>/dev/null | cut -d \" -f2)" "$(grep . /etc/redhat-release 2>/dev/null)" "$(grep . /etc/issue 2>/dev/null | cut -d \\ -f1 | sed '/^[ ]*$/d')")
+
+for i in "${CMD[@]}"; do
+    SYS="$i" && [[ -n $SYS ]] && break
+done
+
+for ((int = 0; int < ${#REGEX[@]}; int++)); do
+    if [[ $(echo "$SYS" | tr '[:upper:]' '[:lower:]') =~ ${REGEX[int]} ]]; then
+        SYSTEM="${RELEASE[int]}" && [[ -n $SYSTEM ]] && break
     fi
+done
 
-    # 下载Sing-box
-    latest_version=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | grep 'tag_name' | cut -d '"' -f 4)
-    if [[ "$(uname -m)" == "x86_64" ]]; then
-        arch="amd64"
-    elif [[ "$(uname -m)" == "aarch64" ]]; then
-        arch="arm64"
-    else
-        red "不支持的架构: $(uname -m)"
+[[ -z $SYSTEM ]] && red "不支持当前VPS系统, 请使用主流的操作系统" && exit 1
+
+# 检测 VPS 处理器架构
+archAffix() {
+    case "$(uname -m)" in
+        x86_64 | amd64) echo 'amd64' ;;
+        armv8 | arm64 | aarch64) echo 'arm64' ;;
+        s390x) echo 's390x' ;;
+        *) red "不支持的CPU架构!" && exit 1 ;;
+    esac
+}
+
+install_base(){
+    if [[ ! $SYSTEM == "CentOS" ]]; then
+        ${PACKAGE_UPDATE[int]}
+    fi
+    ${PACKAGE_INSTALL[int]} curl wget sudo tar openssl
+}
+
+install_singbox(){
+    install_base
+
+    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
+    if [[ -z $last_version ]]; then
+        red "获取版本信息失败，请检查VPS的网络状态！"
         exit 1
     fi
 
-    wget -O sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/${latest_version}/sing-box-${latest_version}-linux-${arch}.tar.gz" || { red "下载 Sing-box 失败" && exit 1; }
-    tar -xf sing-box.tar.gz -C /usr/bin/ || { red "解压 Sing-box 失败" && exit 1; }
-    rm sing-box.tar.gz
+    if [[ $SYSTEM == "CentOS" ]]; then
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).rpm -O sing-box.rpm
+        rpm -ivh sing-box.rpm
+        rm -f sing-box.rpm
+    else
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
+        dpkg -i sing-box.deb
+        rm -f sing-box.deb
+    fi
 
-    # 获取用户输入
-    echo -e "请输入监听端口 (默认: 443):"
-    read -r listen_port
-    listen_port=${listen_port:-443}
-    echo -e "请输入伪装的域名 (默认: example.com):"
-    read -r domain_name
-    domain_name=${domain_name:-example.com}
+    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
+        green "Sing-box 安装成功！"
+    else
+        red "Sing-box 安装失败！"
+        exit 1
+    fi
+    
+    # 询问用户有关 Reality 端口、UUID 和回落域名
+    read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
+    [[ -z $port ]] && port=$(shuf -i 2000-65535 -n 1)
+    until [[ -z $(ss -ntlp | awk '{print $4}' | sed 's/.*://g' | grep -w "$port") ]]; do
+        if [[ -n $(ss -ntlp | awk '{print $4}' | sed 's/.*://g' | grep -w "$port") ]]; then
+            echo -e "${RED} $port ${PLAIN} 端口已经被其他程序占用，请更换端口重试！"
+            read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
+            [[ -z $port ]] && port=$(shuf -i 2000-65535 -n 1)
+        fi
+    done
+    read -rp "请输入 UUID [可留空待脚本生成]: " UUID
+    [[ -z $UUID ]] && UUID=$(sing-box generate uuid)
+    read -rp "请输入配置回落的域名 [默认世嘉官网]: " dest_server
+    [[ -z $dest_server ]] && dest_server="www.sega.com"
 
-    # 生成VLESS+REALITY客户端配置
-    uuid=$(/usr/bin/sing-box generate uuid)
-    public_key=$(/usr/bin/sing-box generate reality-key | grep -oP 'Public Key: \K.*')
-    private_key=$(/usr/bin/sing-box generate reality-key | grep -oP 'Private Key: \K.*')
+    # Reality short-id
+    short_id=$(openssl rand -hex 8)
 
+    # Reality 公私钥
+    keys=$(sing-box generate reality-keypair)
+    private_key=$(echo $keys | awk -F " " '{print $2}')
+    public_key=$(echo $keys | awk -F " " '{print $4}')
+
+    # 将默认的配置文件删除，并写入 Reality 配置
+    rm -f /etc/sing-box/config.json
     cat << EOF > /etc/sing-box/config.json
 {
-  "log": {
-    "level": "info",
-    "timestamp": true
-  },
-  "inbounds": [
-    {
-      "type": "tun",
-      "inet4_address": "172.19.0.1/30",
-      "inet6_address": "fdfe:dcba:9876::1/126",
-      "auto_route": true,
-      "strict_route": true,
-      "endpoint_independent_nat": true,
-      "stack": "system",
-      "mtu": 1280
+    "log": {
+        "level": "trace",
+        "timestamp": true
     },
-    {
-      "type": "mixed",
-      "listen": "0.0.0.0",
-      "listen_port": 1080
-    }
-  ],
-  "outbounds": [
-    {
-      "type": "vless",
-      "server": "0.0.0.0",
-      "server_port": ${listen_port},
-      "uuid": "${uuid}",
-      "flow": "xtls-rprx-vision",
-      "security": "reality",
-      "reality": {
-        "public_key": "${public_key}",
-        "private_key": "${private_key}",
-        "short_id": ["00000000"],
-        "server_names": ["${domain_name}"]
-      },
-      "transport": {
-        "type": "tcp",
-        "tcp_settings": {
-          "header": {
-            "type": "none"
-          }
+    "inbounds": [
+        {
+            "type": "vless",
+            "tag": "vless-in",
+            "listen": "::",
+            "listen_port": $port,
+            "sniff": true,
+            "sniff_override_destination": true,
+            "users": [
+                {
+                    "uuid": "$UUID",
+                    "flow": "xtls-rprx-vision"
+                }
+            ],
+            "tls": {
+                "enabled": true,
+                "server_name": "$dest_server",
+                "reality": {
+                    "enabled": true,
+                    "handshake": {
+                        "server": "$dest_server",
+                        "server_port": 443
+                    },
+                    "private_key": "$private_key",
+                    "short_id": [
+                        "$short_id"
+                    ]
+                }
+            }
         }
-      }
+    ],
+    "outbounds": [
+        {
+            "type": "direct",
+            "tag": "direct"
+        },
+        {
+            "type": "block",
+            "tag": "block"
+        }
+    ],
+    "route": {
+        "rules": [
+            {
+                "geoip": "cn",
+                "outbound": "block"
+            },
+            {
+                "geosite": "category-ads-all",
+                "outbound": "block"
+            }
+        ],
+        "final": "direct"
     }
-  ],
-  "route": {
-    "rules": [
-      {
-        "outbound": "vless",
-        "inbound": ["tun"]
-      }
-    ]
-  }
 }
 EOF
 
-    # 创建服务文件
-    cat << EOF > /etc/systemd/system/sing-box.service
-[Unit]
-Description=Sing-box Service
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/sing-box run -c /etc/sing-box/config.json
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-    # 启用并启动服务
-    sudo systemctl enable sing-box >/dev/null 2>&1 || { red "启用 Sing-box 服务失败" && exit 1; }
-    sudo systemctl start sing-box >/dev/null 2>&1 || { red "启动 Sing-box 服务失败" && exit 1; }
-
-    if [[ -n $(sudo systemctl status sing-box 2>/dev/null | grep -w active) ]]; then
-        green "Sing-box 配置 VLESS + REALITY 成功，监听端口: ${listen_port}，域名: ${domain_name}"
-        log "Sing-box 配置 VLESS + REALITY 成功"
-        
-        # 生成VLESS链接
-        vless_link="vless://${uuid}@${domain_name}:${listen_port}?security=reality&flow=xtls-rprx-vision&sni=${domain_name}&fp=chrome&pbk=${public_key}&sid=00000000&type=tcp#Sing-box"
-        green "VLESS链接如下："
-        echo -e "\n${vless_link}\n"
+    warp_v4=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
+    warp_v6=$(curl -s6m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
+    if [[ $warp_v4 =~ on|plus ]] || [[ $warp_v6 =~ on|plus ]]; then
+        systemctl stop warp-go >/dev/null 2>&1
+        systemctl disable warp-go >/dev/null 2>&1
+        wg-quick down wgcf >/dev/null 2>&1
+        systemctl disable wg-quick@wgcf >/dev/null 2>&1
+        IP=$(expr "$(curl -ks4m8 -A Mozilla https://api.ip.sb/geoip)" : '.*ip\":[ ]*\"\([^"]*\).*') || IP=$(expr "$(curl -ks6m8 -A Mozilla https://api.ip.sb/geoip)" : '.*ip\":[ ]*\"\([^"]*\).*')
+        systemctl start warp-go >/dev/null 2>&1
+        systemctl enable warp-go >/dev/null 2>&1
+        wg-quick start wgcf >/dev/null 2>&1
+        systemctl enable wg-quick@wgcf >/dev/null 2>&1
     else
-        red "Sing-box 配置 VLESS + REALITY 失败，请运行 sudo systemctl status sing-box 查看服务状态并反馈"
-        log "Sing-box 配置 VLESS + REALITY 失败"
-        exit 1
+        IP=$(expr "$(curl -ks4m8 -A Mozilla https://api.ip.sb/geoip)" : '.*ip\":[ ]*\"\([^"]*\).*') || IP=$(expr "$(curl -ks6m8 -A Mozilla https://api.ip.sb/geoip)" : '.*ip\":[ ]*\"\([^"]*\).*')
     fi
+
+    mkdir /root/sing-box >/dev/null 2>&1
+
+    # 生成 vless 分享链接及 Clash Meta 配置文件
+    share_link="vless://$UUID@$IP:$port?encryption=none&flow=xtls-rprx-vision&security=reality&sni=$dest_server&fp=chrome&pbk=$public_key&sid=$short_id&type=tcp&headerType=none#Felix-Reality"
+    echo ${share_link} > /root/sing-box/share-link.txt
+    cat << EOF > /root/sing-box/clash-meta.yaml
+mixed-port: 7890
+external-controller: 127.0.0.1:9090
+allow-lan: false
+mode: rule
+log-level: debug
+ipv6: true
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  nameserver:
+    - 8.8.8.8
+    - 1.1.1.1
+    - 114.114.114.114
+
+proxies:
+  - name: Felix-Reality
+    type: vless
+    server: $IP
+    port: $port
+    uuid: $UUID
+    network: tcp
+    tls: true
+    udp: true
+    xudp: true
+    flow: xtls-rprx-vision
+    servername: $dest_server
+    reality-opts:
+      public-key: "$public_key"
+      short-id: "$short_id"
+    client-fingerprint: chrome
+
+proxy-groups:
+  - name: Proxy
+    type: select
+    proxies:
+      - Felix-Reality
+      
+rules:
+  - GEOIP,CN,DIRECT
+  - MATCH,Proxy
+EOF
+
+    systemctl start sing-box >/dev/null 2>&1
+    systemctl enable sing-box >/dev/null 2>&1
+
+    if [[ -n $(systemctl status sing-box 2>/dev/null | grep -w active) && -f '/etc/sing-box/config.json' ]]; then
+        green "Sing-box 服务启动成功"
+    else
+        red "Sing-box 服务启动失败，请运行 systemctl status sing-box 查看服务状态并反馈，脚本退出" && exit 1
+    fi
+
+    yellow "下面是 Sing-box Reality 的分享链接，并已保存至 /root/sing-box/share-link.txt"
+    red $share_link
+    yellow "Clash Meta 配置文件已保存至 /root/sing-box/clash-meta.yaml"
 }
 
-# 主菜单
-menu() {
+uninstall_singbox(){
+    systemctl stop sing-box >/dev/null 2>&1
+    systemctl disable sing-box >/dev/null 2>&1
+    ${PACKAGE_UNINSTALL} sing-box
+    rm -rf /root/sing-box
+    green "Sing-box 已彻底卸载成功！"
+}
+
+start_singbox(){
+    systemctl start sing-box
+    systemctl enable sing-box >/dev/null 2>&1
+}
+
+stop_singbox(){
+    systemctl stop sing-box
+    systemctl disable sing-box >/dev/null 2>&1
+}
+
+changeport(){
+    old_port=$(cat /etc/sing-box/config.json | grep listen_port | awk -F ": " '{print $2}' | sed "s/,//g")
+
+    read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
+    [[ -z $port ]] && port=$(shuf -i 2000-65535 -n 1)
+    until [[ -z $(ss -ntlp | awk '{print $4}' | sed 's/.*://g' | grep -w "$port") ]]; do
+        if [[ -n $(ss -ntlp | awk '{print $4}' | sed 's/.*://g' | grep -w "$port") ]]; then
+            echo -e "${RED} $port ${PLAIN} 端口已经被其他程序占用，请更换端口重试！"
+            read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
+            [[ -z $port ]] && port=$(shuf -i 2000-65535 -n 1)
+        fi
+    done
+
+    sed -i "s/$old_port/$port/g" /etc/sing-box/config.json
+    sed -i "s/$old_port/$port/g" /root/sing-box/share-link.txt
+    stop_singbox && start_singbox
+
+    green "Sing-box 端口已修改成功！"
+}
+
+changeuuid(){
+    old_uuid=$(cat /etc/sing-box/config.json | grep uuid | awk -F ": " '{print $2}' | sed "s/\"//g" | sed "s/,//g")
+
+    read -rp "请输入 UUID [可留空待脚本生成]: " UUID
+    [[ -z $UUID ]] && UUID=$(sing-box generate uuid)
+
+    sed -i "s/$old_uuid/$UUID/g" /etc/sing-box/config.json
+    sed -i "s/$old_uuid/$UUID/g" /root/sing-box/share-link.txt
+    stop_singbox && start_singbox
+
+    green "Sing-box UUID 已修改成功！"
+}
+
+changedest(){
+    old_dest=$(cat /etc/sing-box/config.json | grep server | sed -n 1p | awk -F ": " '{print $2}' | sed "s/\"//g" | sed "s/,//g")
+
+    read -rp "请输入配置回落的域名 [默认微软官网]: " dest_server
+    [[ -z $dest_server ]] && dest_server="www.sega.com"
+
+    sed -i "s/$old_dest/$dest_server/g" /etc/sing-box/config.json
+    sed -i "s/$old_dest/$dest_server/g" /root/sing-box/share-link.txt
+    stop_singbox && start_singbox
+
+    green "Sing-box 回落域名已修改成功！"
+}
+
+change_conf(){
+    green "Sing-box 配置变更选择如下:"
+    echo -e " ${GREEN}1.${PLAIN} 修改端口"
+    echo -e " ${GREEN}2.${PLAIN} 修改UUID"
+    echo -e " ${GREEN}3.${PLAIN} 修改回落域名"
+    echo ""
+    read -p " 请选择操作 [1-3]: " confAnswer
+    case $confAnswer in
+        1 ) changeport ;;
+        2 ) changeuuid ;;
+        3 ) changedest ;;
+        * ) exit 1 ;;
+    esac
+}
+
+menu(){
     clear
-    echo -e "#               ${RED}Sing-box VLESS + REALITY 一键搭建脚本${PLAIN}               #"
+    echo "#############################################################"
+    echo -e "#               ${RED}Sing-box Reality 一键安装脚本${PLAIN}               #"
     echo -e "# ${GREEN}作者${PLAIN}: 秋名山吃豆腐                                        #"
     echo -e "# ${GREEN}博客${PLAIN}: https://felix-zf.github.io                          #"
     echo -e "# ${GREEN}GitHub 项目${PLAIN}: https://github.com/Felix-zf                  #"
@@ -169,43 +340,29 @@ menu() {
     echo -e "# ${GREEN}Telegram 频道${PLAIN}: https://t.me/xxxxxx                        #"
     echo -e "# ${GREEN}Telegram 群组${PLAIN}: https://t.me/xxxxxx                        #"
     echo -e "# ${GREEN}YouTube 频道${PLAIN}: https://www.youtube.com/@Felix7200GT        #"
+    echo "#############################################################"
     echo ""
-    echo -e " ${GREEN}1.${PLAIN} 安装 Sing-box 并配置 VLESS + REALITY"
-    echo -e " ${GREEN}2.${PLAIN} 卸载 Sing-box"
+    echo -e " ${GREEN}1.${PLAIN} 安装 Sing-box Reality"
+    echo -e " ${GREEN}2.${PLAIN} 卸载 Sing-box Reality"
+    echo " -------------"
+    echo -e " ${GREEN}3.${PLAIN} 启动 Sing-box Reality"
+    echo -e " ${GREEN}4.${PLAIN} 停止 Sing-box Reality"
+    echo -e " ${GREEN}5.${PLAIN} 重载 Sing-box Reality"
+    echo " -------------"
+    echo -e " ${GREEN}6.${PLAIN} 修改 Sing-box Reality 配置"
+    echo " -------------"
     echo -e " ${GREEN}0.${PLAIN} 退出"
     echo ""
-    read -rp " 请输入选项 [0-2] ：" answer
+    read -rp " 请输入选项 [0-6] ：" answer
     case $answer in
         1) install_singbox ;;
         2) uninstall_singbox ;;
-        *) red "请输入正确的选项 [0-2]！" && exit 1 ;;
+        3) start_singbox ;;
+        4) stop_singbox ;;
+        5) stop_singbox && start_singbox ;;
+        6) change_conf ;;
+        *) red "请输入正确的选项 [0-6]！" && exit 1 ;;
     esac
 }
 
-# 卸载Sing-box
-uninstall_singbox() {
-    log "Uninstalling Sing-box..."
-    if ! confirm "你确定要卸载 Sing-box 吗？"; then
-        log "用户取消卸载"
-        exit 0
-    fi
-
-    sudo systemctl stop sing-box >/dev/null 2>&1 || { red "停止 Sing-box 服务失败" && exit 1; }
-    sudo systemctl disable sing-box >/dev/null 2>&1 || { red "禁用 Sing-box 服务失败" && exit 1; }
-    sudo rm /usr/bin/sing-box >/dev/null 2>&1 || { red "删除 Sing-box 二进制文件失败" && exit 1; }
-    sudo rm /etc/sing-box/config.json >/dev/null 2>&1 || { red "删除 Sing-box 配置文件失败" && exit 1; }
-    sudo rm /etc/systemd/system/sing-box.service >/dev/null 2>&1 || { red "删除 Sing-box 服务文件失败" && exit 1; }
-
-    green "Sing-box 卸载完成"
-    log "Sing-box 卸载完成"
-}
-
-# 确保脚本以 root 权限运行
-if [[ $EUID -ne 0 ]]; then
-   red "注意：请在root用户下运行脚本"
-   log "脚本需要以root权限运行，但当前用户不是root"
-   exit 1
-fi
-
-# 开始主菜单
 menu
