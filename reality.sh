@@ -59,7 +59,7 @@ install_base(){
 install_singbox(){
     install_base
 
-    latest_version=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | grep 'tag_name' | cut -d '"' -f 4)
+    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
     if [[ -z $last_version ]]; then
         red "获取版本信息失败，请检查VPS的网络状态！"
         exit 1
