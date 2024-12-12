@@ -59,25 +59,27 @@ install_base(){
 install_singbox(){
     install_base
 
-    red "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    green "一、开始下载并安装Sing-box正式版1.10系列内核……请稍等"
-    echo
-    sbcore=$(curl -Ls https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | grep -Eo '"1\.10[0-9\.]*",'  | sed -n 1p | tr -d '",')
-    sbname="sing-box-$sbcore-linux-$cpu"
-    curl -L -o /etc/s-box/sing-box.tar.gz  -# --retry 2 https://github.com/SagerNet/sing-box/releases/download/v$sbcore/$sbname.tar.gz
-    if [[ -f '/etc/s-box/sing-box.tar.gz' ]]; then
-    tar xzf /etc/s-box/sing-box.tar.gz -C /etc/s-box
-    mv /etc/s-box/$sbname/sing-box /etc/s-box
-    rm -rf /etc/s-box/{sing-box.tar.gz,$sbname}
-    if [[ -f '/etc/s-box/sing-box' ]]; then
-    chown root:root /etc/s-box/sing-box
-    chmod +x /etc/s-box/sing-box
-    blue "成功安装 Sing-box 内核版本：$(/etc/s-box/sing-box version | awk '/version/{print $NF}')"
-    else
-    red "下载 Sing-box 内核不完整，安装失败，请再运行安装一次" && exit
+   last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
+    if [[ -z $last_version ]]; then
+        red "获取版本信息失败，请检查VPS的网络状态！"
+        exit 1
     fi
+
+    if [[ $SYSTEM == "CentOS" ]]; then
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).rpm -O sing-box.rpm
+        rpm -ivh sing-box.rpm
+        rm -f sing-box.rpm
     else
-    red "下载 Sing-box 内核失败，请再运行安装一次，并检测VPS的网络是否可以访问Github" && exit
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
+        dpkg -i sing-box.deb
+        rm -f sing-box.deb
+    fi
+
+    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
+        green "Sing-box 安装成功！"
+    else
+        red "Sing-box 安装失败！"
+        exit 1
     fi
     
     # 询问用户有关 Reality 端口、UUID 和回落域名
