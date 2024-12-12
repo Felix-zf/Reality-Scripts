@@ -75,6 +75,13 @@ install_singbox(){
         rm -f sing-box.deb
     fi
 
+    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
+        green "Sing-box 安装成功！"
+    else
+        red "Sing-box 安装失败！"
+        exit 1
+    fi
+    
     # 询问用户有关 Reality 端口、UUID 和回落域名
     read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
     [[ -z $port ]] && port=$(shuf -i 2000-65535 -n 1)
