@@ -35,6 +35,16 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-
 ```
 bash <(wget -qO- -o- https://github.com/233boy/sing-box/raw/main/install.sh)
 ```
+
+***Sing-box内核相关命令***
+```
+sudo systemctl start sing-box      #启动sing-box
+sudo systemctl stop sing-box       #停止sing-box
+sudo systemctl restart sing-box    #重启sing-box
+sudo systemctl status sing-box     #检查Sing-box服务状态
+sudo systemctl enable sing-box     #启用Sing-box服务（设置为开机自启）
+journalctl -u sing-box             #查看Sing-box服务的日志
+```
 Tips：Sing-box 一键安装脚本 & 管理脚本：https://github.com/233boy/sing-box
 
 接着输入1选项，安装Sing-box Reality，等待安装依赖之后、设置端口号、UUID和回落域名。管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
