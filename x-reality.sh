@@ -77,7 +77,7 @@ mkdir /usr/xray
 architecture=$(uname -m)
 if [[ "$architecture" == "x86_64" ]]; then
 #系统是 64 位架构
-wget -P /usr/xray https://github.com/XTLS/Xray-core/releases/download/v1.8.21/Xray-linux-64.zip
+wget -P /usr/xray "https://github.com/XTLS/Xray-core/releases/download/${latest_version}/Xray-linux-${arch}.zip"
 elif [[ "$architecture" == "i386" || "$architecture" == "i686" ]]; then
 #系统是 32 位架构
 wget -P /usr/xray https://github.com/XTLS/Xray-core/releases/download/v1.8.21/Xray-linux-32.zip
