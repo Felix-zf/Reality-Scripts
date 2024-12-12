@@ -1,6 +1,7 @@
 # 搭建教程
 
 - Project Core Sing-box：https://github.com/SagerNet/sing-box
+- Project Core Xray: https://github.com/XTLS/Xray-core/releases
 - Sing-box Offical Blog: https://sing-box.sagernet.org/zh
 - Offical Blog: https://sing-box.sagernet.org
 
