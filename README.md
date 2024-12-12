@@ -27,7 +27,7 @@ lsmod | grep bbr
 
 SSH进入VPS，复制粘贴并执行以下脚本  
 
-Felix的一键脚本
+Felix-zf的一键脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/reality.sh && bash reality.sh
 ```
