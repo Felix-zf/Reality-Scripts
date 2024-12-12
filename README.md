@@ -26,16 +26,22 @@ lsmod | grep bbr
 **1.基于Sing-box内核的一键安装脚本**
 
 SSH进入VPS，复制粘贴并执行以下脚本  
-```shell
+
+Felix的一键脚本
+```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/reality.sh && bash reality.sh
 ```
-接着输入1选项，安装Sing-box Reality
+223Boy的一键脚本
+```
+bash <(wget -qO- -o- https://github.com/233boy/sing-box/raw/main/install.sh)
+```
+Tips：Sing-box 一键安装脚本 & 管理脚本：https://github.com/233boy/sing-box
 
-等待安装依赖之后、设置端口号、UUID和回落域名
-
-管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
+接着输入1选项，安装Sing-box Reality，等待安装依赖之后、设置端口号、UUID和回落域名。管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
 
 **2.基于Xray内核的一键安装脚本**
+
+Oldfriendme的一键脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/x-reality.sh && bash x-reality.sh
 ```
