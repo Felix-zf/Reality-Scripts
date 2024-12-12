@@ -59,28 +59,19 @@ install_base(){
 install_singbox(){
     install_base
 
-    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
-    if [[ -z $last_version ]]; then
-        red "获取版本信息失败，请检查VPS的网络状态！"
+    latest_version=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | grep 'tag_name' | cut -d '"' -f 4)
+    if [[ "$(uname -m)" == "x86_64" ]]; then
+        arch="amd64"
+    elif [[ "$(uname -m)" == "aarch64" ]]; then
+        arch="arm64"
+    else
+        red "不支持的架构: $(uname -m)"
         exit 1
     fi
 
-    if [[ $SYSTEM == "CentOS" ]]; then
-        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).rpm -O sing-box.rpm
-        rpm -ivh sing-box.rpm
-        rm -f sing-box.rpm
-    else
-        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
-        dpkg -i sing-box.deb
-        rm -f sing-box.deb
-    fi
-
-    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
-        green "Sing-box 安装成功！"
-    else
-        red "Sing-box 安装失败！"
-        exit 1
-    fi
+    wget -O sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/${latest_version}/sing-box-${latest_version}-linux-${arch}.tar.gz" || { red "下载 Sing-box 失败" && exit 1; }
+    tar -xf sing-box.tar.gz -C /usr/bin/ || { red "解压 Sing-box 失败" && exit 1; }
+    rm sing-box.tar.gz
     
     # 询问用户有关 Reality 端口、UUID 和回落域名
     read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
