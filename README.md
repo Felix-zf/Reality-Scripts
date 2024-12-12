@@ -52,7 +52,7 @@ Tips：Sing-box 一键安装脚本 & 管理脚本：https://github.com/233boy/si
 
 ### 2.基于Xray内核的一键安装脚本
 
-- Oldfriendme的一键脚本
+- Oldfriendme的一键脚本| (注意更新内核）
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/x-reality.sh && bash x-reality.sh
 ```
