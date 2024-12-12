@@ -23,7 +23,7 @@ lsmod | grep bbr
 
 ## Vless reality 协议脚本
 
-**1.基于Sing-box内核的一键安装脚本**
+### 1.基于Sing-box内核的一键安装脚本
 
 SSH进入VPS，复制粘贴并执行以下脚本  
 
@@ -49,7 +49,7 @@ Tips：Sing-box 一键安装脚本 & 管理脚本：https://github.com/233boy/si
 
 接着输入1选项，安装Sing-box Reality，等待安装依赖之后、设置端口号、UUID和回落域名。管理命令为：bash reality.sh，可使用6选项修改Reality的配置文件
 
-**2.基于Xray内核的一键安装脚本**
+### 2.基于Xray内核的一键安装脚本
 
 - Oldfriendme的一键脚本
 ```
@@ -71,7 +71,7 @@ xray.help      #帮助
 ```
 Tips:详情见 Oldfriendme 的项目：https://github.com/oldfriendme/xrayREALITY
 
-### 回落域名说明
+## 回落域名说明
 1.选择回落域名的最低标准为：国外的网站，支持 TLS v1.3、H2 协议，并使用 x25519 证书  
 ```
 # 域名推荐
