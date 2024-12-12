@@ -132,4 +132,5 @@ Important
 * 纯纯牛马林师傅手搓 sing-box 视频：https://www.youtube.com/watch?v=2QaeeZv9C-A
 * Elden的sing-box配置hysteria2 笔记：https://idev.dev/proxy/singbox-hysteria2.html
 * Zxcvos的xray-script项目搭建vless-reality：https://github.com/zxcvos/Xray-script
+* ooly手动搭建reality脚本教程：https://ooly.cc/archives/linux/406/
 
