@@ -59,23 +59,28 @@ install_base(){
 install_singbox(){
     install_base
 
-    echo "开始安装 sing-box..."
-    # 更新系统包管理器
-    apt update -y
-    apt upgrade -y
-    
-    # 安装必要的依赖
-    apt install -y curl wget unzip
+    last_version=$(curl -s https://data.jsdelivr.com/v1/package/gh/SagerNet/sing-box | sed -n 4p | tr -d ',"' | awk '{print $1}')
+    if [[ -z $last_version ]]; then
+        red "获取版本信息失败，请检查VPS的网络状态！"
+        exit 1
+    fi
 
-    # 下载并解压sing-box
-    wget https://github.com/sing-box/sing-box/releases/latest/download/sing-box-linux-amd64.tar.gz -O /tmp/sing-box-linux.tar.gz
-    tar -xzvf /tmp/sing-box-linux.tar.gz -C /usr/local/bin/
-    
-    # 设置sing-box的默认配置目录
-    mkdir -p /etc/sing-box
-    cp /usr/local/bin/sing-box /etc/sing-box/
+    if [[ $SYSTEM == "CentOS" ]]; then
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).rpm -O sing-box.rpm
+        rpm -ivh sing-box.rpm
+        rm -f sing-box.rpm
+    else
+        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
+        dpkg -i sing-box.deb
+        rm -f sing-box.deb
+    fi
 
-    echo "sing-box 安装完成！"
+    if [[ -f "/etc/systemd/system/sing-box.service" ]]; then
+        green "Sing-box 安装成功！"
+    else
+        red "Sing-box 安装失败！"
+        exit 1
+    fi
     
     # 询问用户有关 Reality 端口、UUID 和回落域名
     read -p "设置 Sing-box 端口 [1-65535]（回车则随机分配端口）：" port
