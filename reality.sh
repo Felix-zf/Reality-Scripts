@@ -70,7 +70,7 @@ install_singbox(){
         rpm -ivh sing-box.rpm
         rm -f sing-box.rpm
     else
-        wget https://github.com/SagerNet/sing-box/releases/download/v"$last_version"/sing-box_"$last_version"_linux_$(archAffix).deb -O sing-box.deb
+        wget https://github.com/SagerNet/sing-box/releases/download/v$SING_BOX_VERSION/sing-box-$SING_BOX_VERSION-linux_$(archAffix).deb -O sing-box.deb
         dpkg -i sing-box.deb
         rm -f sing-box.deb
     fi
