@@ -53,6 +53,44 @@ install_base(){
     if [[ ! $SYSTEM == "CentOS" ]]; then
         ${PACKAGE_UPDATE[int]}
     fi
+    
+    # 自动生成和添加公钥
+    if [[ $SYSTEM == "Debian" ]] || [[ $SYSTEM == "Ubuntu" ]]; then
+        # 确保gpg和wget已安装
+        ${PACKAGE_INSTALL[int]} gpg wget
+
+        # 生成公钥
+        gpg --generate-key --batch <<EOF
+        %no-protection
+        Key-Type: RSA
+        Key-Length: 4096
+        Subkey-Type: RSA
+        Subkey-Length: 4096
+        Name-Real: Sing-Box Auto Key
+        Name-Email: sing-box@example.com
+        Expire-Date: 0
+        %commit
+EOF
+
+        # 获取生成的公钥
+        PUBKEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | tail -1 | awk '{print $2}' | cut -d'/' -f2 | cut -d' ' -f1)
+
+        # 导出公钥并添加到系统
+        gpg --armor --export $PUBKEY_ID | gpg --dearmor -o /usr/share/keyrings/sing-box.gpg
+
+        # 添加公钥到apt-key（如果支持）
+        if command -v apt-key >/dev/null 2>&1; then
+            apt-key add /usr/share/keyrings/sing-box.gpg
+        fi
+
+        # 添加仓库配置文件
+        echo "deb [signed-by=/usr/share/keyrings/sing-box.gpg] https://deb.sagernet.org * *" | sudo tee /etc/apt/sources.list.d/sing-box.list > /dev/null
+
+        # 更新包列表
+        ${PACKAGE_UPDATE[int]}
+    fi
+
+    # 安装依赖包
     ${PACKAGE_INSTALL[int]} curl wget sudo tar openssl
 }
 
