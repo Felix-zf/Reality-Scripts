@@ -50,8 +50,10 @@ archAffix() {
 }
 
 install_base(){
-    if [[ ! $SYSTEM == "CentOS" ]]; then
-        ${PACKAGE_UPDATE[int]}
+    if [[ ${OS_RELEASE} == "ubuntu" || ${OS_RELEASE} == "debian" ]]; then
+        apt update && apt install wget tar jq iptables iproute2 -y
+    elif [[ ${OS_RELEASE} == "centos" ]]; then
+        yum update && yum install wget tar jq iptables iproute2 -y
     fi
     ${PACKAGE_INSTALL[int]} curl wget sudo tar openssl
 }
