@@ -112,6 +112,12 @@ dl.google.com
 - 打开Chrome，进入待测网页。按下F12键，转到“Secure”选项卡。在“Connection”下出现“TLS 1.3，X25519”字样即代表网页支持 TLSv1.3 协议、并且使用的是 x25519 证书
 - 转到“Console”选项卡，输入这个命令 window.chrome.loadTimes()，查看 npnNegotiatedProtocol 的值是否为 h2，如果是的话就代表使用的是 H2 协议
 
+## 功能
+- 集成快捷指令Command【xray.start, xray.stop, xray.restart, xray.chuuid, xray.delxray】
+- 单用户使用
+- 支持sni-filter模式，阻止指向cdn后被偷跑流量(X64)。
+ 
+
 ## 注意事项
 Important
 
@@ -126,8 +132,6 @@ Important
 应该改为
 
 `vless://uuid@1.1.8.8:443?encryption=none&security=reality&sni=...`
-
-
 
 
 ## 常见问题
