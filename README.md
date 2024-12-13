@@ -117,7 +117,7 @@ dl.google.com
 - 集成快捷指令Command【xray.start, xray.stop, xray.restart, xray.chuuid, xray.delxray】
 - 单用户使用
 - 支持sni-filter模式，阻止指向cdn后被偷跑流量(X64)。
-- 注意，脚本构造简单。只支持REALITY协议，不支持其他协议
+- 脚本构造简单，只支持REALITY协议，不支持其他协议。
 
 
 ## 注意事项
