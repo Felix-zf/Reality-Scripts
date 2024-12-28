@@ -12,7 +12,7 @@ print_with_delay() {
 }
 
 # Introduction animation
-print_with_delay "sing-REALITY-box by FELIX | @Felix7200gts" 0.1
+print_with_delay "sing-REALITY-box by FELIX-ZF | @Felix7200gts" 0.1
 echo ""
 echo ""
 
