@@ -12,7 +12,8 @@ wget -qO- bench.sh | bash
 ```
 2.Debian更新系统
 ```
-apt update -y
+sudo apt update
+sudo apt upgrade
 ```
 3.BBR加速
 ```
