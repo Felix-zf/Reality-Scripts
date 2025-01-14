@@ -31,7 +31,7 @@ SSH进入VPS，复制粘贴并执行以下脚本
 
 - Auto Script
 ```
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/singbox-reality.sh && bash singbox-reality.sh
+bash <(curl -fsSL https://github.com/Felix-zf/Vless-reality/raw/main/singbox-reality.sh)
 ```
 - 223Boy Script
 ```
