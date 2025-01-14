@@ -29,11 +29,11 @@ lsmod | grep bbr
 
 SSH进入VPS，复制粘贴并执行以下脚本  
 
-- Felix-zf的一键脚本
+- Auto Script
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/singbox-reality.sh && bash singbox-reality.sh
 ```
-- 223Boy的一键脚本
+- 223Boy Script
 ```
 bash <(wget -qO- -o- https://github.com/233boy/sing-box/raw/main/install.sh)
 ```
