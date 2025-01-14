@@ -157,4 +157,5 @@ dl.google.com
 * Elden的sing-box配置hysteria2 笔记：https://idev.dev/proxy/singbox-hysteria2.html
 * Zxcvos的xray-script项目搭建vless-reality：https://github.com/zxcvos/Xray-script
 * ooly手动搭建reality脚本教程：https://ooly.cc/archives/linux/406/
+* deathline94's scripts: https://github.com/deathline94/sing-REALITY-Box
 
