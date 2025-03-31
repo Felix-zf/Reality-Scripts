@@ -31,7 +31,7 @@ SSH进入VPS，复制粘贴并执行以下脚本
 
 - Auto Script
 ```
-bash <(curl -fsSL https://github.com/Felix-zf/Vless-reality/raw/main/singbox-reality.sh)
+bash <(curl -fsSL https://github.com/Felix-zf/Reality-Scripts/raw/main/singbox-reality.sh)
 ```
 - 223Boy Script
 ```
@@ -55,11 +55,11 @@ Tips：Sing-box 一键安装脚本 & 管理脚本：https://github.com/233boy/si
 
 - Zxcvos的一键脚本
 ```
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/xray-reality.sh && bash xray-reality.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Reality-Scripts/main/xray-reality.sh && bash xray-reality.sh
 ```
 - Oldfriendme的一键脚本
 ```
-wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Vless-reality/main/x-reality.sh && bash x-reality.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Reality-Scripts/main/x-reality.sh && bash x-reality.sh
 ```
 
 ***Xray内核相关命令***
