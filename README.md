@@ -57,10 +57,13 @@ Tips：Sing-box 一键安装脚本 & 管理脚本：https://github.com/233boy/si
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Reality-Scripts/main/xray-reality.sh && bash xray-reality.sh
 ```
+Tips: 详情见 zxcvos 的项目: https://github.com/zxcvos/Xray-script
+
 - Oldfriendme的一键脚本
 ```
 wget -N --no-check-certificate https://raw.githubusercontent.com/Felix-zf/Reality-Scripts/main/x-reality.sh && bash x-reality.sh
 ```
+Tips: 详情见 Oldfriendme 的项目：https://github.com/oldfriendme/xrayREALITY
 
 ***Xray内核相关命令***
 ```
@@ -71,7 +74,6 @@ xray.chuuid    #重新生成uuid
 xray.delxray   #彻底删除xray内核及脚本
 xray.help      #帮助
 ```
-Tips:详情见 Oldfriendme 的项目：https://github.com/oldfriendme/xrayREALITY
 
 ## 回落域名说明
 1.选择回落域名的最低标准为：国外的网站，支持 TLS v1.3、H2 协议，并使用 x25519 证书  
