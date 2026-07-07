@@ -29,7 +29,7 @@ lsmod | grep bbr
 
 SSH进入VPS，复制粘贴并执行以下脚本  
 
-- Felix Script
+- 📦 Modify Script
 ```
 bash <(curl -fsSL https://github.com/Felix-zf/Reality-Scripts/raw/main/singbox-reality.sh)
 ```
