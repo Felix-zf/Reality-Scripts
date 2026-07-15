@@ -324,9 +324,9 @@ read -p "Enter desired listen port (default: 443): " listen_port
 listen_port=${listen_port:-443}
 echo ""
 # Ask for server name (sni)
-read -p "Enter server name/SNI (default: addons.mozilla.org): " server_name
+read -p "Enter server name/SNI (default: itunes.apple.com): " server_name
 echo ""
-server_name=${server_name:-addons.mozilla.org}
+server_name=${server_name:-itunes.apple.com}
 
 # Retrieve the server IP address
 server_ip=$(curl -s4 https://api.ipify.org)
