@@ -34,7 +34,7 @@ SSH进入VPS，复制粘贴并执行以下脚本
 bash <(curl -fsSL https://github.com/Felix-zf/Reality-Scripts/raw/main/singbox-reality.sh)
 ```
 
-- 📦 Modify Script 2
+- 📦 Modify Script 2 (.JSON CHANGED )
 ```
 bash <(curl -fsSL https://github.com/Felix-zf/Reality-Scripts/raw/main/singbox-reality2.sh)
 ```
